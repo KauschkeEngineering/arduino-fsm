@@ -147,6 +147,11 @@ void Fsm::run_machine()
   Fsm::check_timed_transitions();
 }
 
+State *Fsm::getCurrentState()
+{
+  return m_current_state;
+}
+
 void Fsm::make_transition(Transition* transition)
 {
  
