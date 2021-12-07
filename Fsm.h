@@ -39,18 +39,16 @@ public:
   Fsm(State* initial_state);
   ~Fsm();
 
-  void add_transition(State* state_from, State* state_to, int event,
-                      void (*on_transition)());
+  void add_transition(State* state_from, State* state_to, int event);
 
-  void add_timed_transition(State* state_from, State* state_to,
-                            unsigned long interval, void (*on_transition)());
+  void add_timed_transition(State* state_from, State* state_to, unsigned long interval);
 
   void check_timed_transitions();
 
   void trigger(int event);
   void run_machine();
   
-  State *getCurrentState();
+  State *get_current_state();
 
 private:
   struct Transition
@@ -58,8 +56,6 @@ private:
     State* state_from;
     State* state_to;
     int event;
-    void (*on_transition)();
-
   };
   struct TimedTransition
   {
@@ -68,8 +64,7 @@ private:
     unsigned long interval;
   };
 
-  static Transition create_transition(State* state_from, State* state_to,
-                                      int event, void (*on_transition)());
+  static Transition create_transition(State* state_from, State* state_to, int event);
 
   void make_transition(Transition* transition);
 

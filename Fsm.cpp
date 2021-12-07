@@ -43,14 +43,12 @@ Fsm::~Fsm()
 }
 
 
-void Fsm::add_transition(State* state_from, State* state_to, int event,
-                         void (*on_transition)())
+void Fsm::add_transition(State* state_from, State* state_to, int event)
 {
   if (state_from == NULL || state_to == NULL)
     return;
 
-  Transition transition = Fsm::create_transition(state_from, state_to, event,
-                                               on_transition);
+  Transition transition = Fsm::create_transition(state_from, state_to, event);
   m_transitions = (Transition*) realloc(m_transitions, (m_num_transitions + 1)
                                                        * sizeof(Transition));
   m_transitions[m_num_transitions] = transition;
@@ -58,14 +56,12 @@ void Fsm::add_transition(State* state_from, State* state_to, int event,
 }
 
 
-void Fsm::add_timed_transition(State* state_from, State* state_to,
-                               unsigned long interval, void (*on_transition)())
+void Fsm::add_timed_transition(State* state_from, State* state_to, unsigned long interval)
 {
   if (state_from == NULL || state_to == NULL)
     return;
 
-  Transition transition = Fsm::create_transition(state_from, state_to, 0,
-                                                 on_transition);
+  Transition transition = Fsm::create_transition(state_from, state_to, 0);
 
   TimedTransition timed_transition;
   timed_transition.transition = transition;
@@ -79,14 +75,12 @@ void Fsm::add_timed_transition(State* state_from, State* state_to,
 }
 
 
-Fsm::Transition Fsm::create_transition(State* state_from, State* state_to,
-                                       int event, void (*on_transition)())
+Fsm::Transition Fsm::create_transition(State* state_from, State* state_to, int event)
 {
   Transition t;
   t.state_from = state_from;
   t.state_to = state_to;
   t.event = event;
-  t.on_transition = on_transition;
 
   return t;
 }
@@ -147,7 +141,7 @@ void Fsm::run_machine()
   Fsm::check_timed_transitions();
 }
 
-State *Fsm::getCurrentState()
+State *Fsm::get_current_state()
 {
   return m_current_state;
 }
@@ -158,9 +152,6 @@ void Fsm::make_transition(Transition* transition)
   // Execute the handlers in the correct order.
   if (transition->state_from->on_exit != NULL)
     transition->state_from->on_exit();
-
-  if (transition->on_transition != NULL)
-    transition->on_transition();
 
   if (transition->state_to->on_enter != NULL)
     transition->state_to->on_enter();
